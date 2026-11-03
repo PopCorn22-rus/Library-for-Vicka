@@ -224,6 +224,22 @@
 <div class="toast" id="toast"></div>
 
 <script>
+ // === ДИАГНОСТИКА ===
+(function(){
+  function show(msg){
+    let d = document.getElementById('__err');
+    if(!d){
+      d = document.createElement('div');
+      d.id = '__err';
+      d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#c0392b;color:#fff;padding:10px;font:12px/1.4 monospace;z-index:99999;white-space:pre-wrap;max-height:60vh;overflow:auto';
+      document.documentElement.appendChild(d);
+    }
+    d.textContent += msg + '\n';
+  }
+  window.addEventListener('error', e => show('ERR: ' + e.message + '  @' + (e.lineno||'?') + ':' + (e.colno||'?')));
+  window.addEventListener('unhandledrejection', e => show('PROMISE: ' + (e.reason && e.reason.message ? e.reason.message : e.reason)));
+  console.log('Диагностика: JS запущен');
+})();
 /* ============ IndexedDB ============ */
 const DB = {
   _p: null,
