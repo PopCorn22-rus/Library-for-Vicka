@@ -1,624 +1,676 @@
-<!DOCTYPE html> 
-<html lang="ru"> 
-<head> 
-<meta charset="UTF-8"> 
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"> 
-<meta name="theme-color" content="#faf8f5"> 
-<meta name="apple-mobile-web-app-capable" content="yes"> 
-<meta name="apple-mobile-web-app-title" content="Библиотека"> 
-<title>Моя библиотека</title> 
-<link rel="manifest" href="manifest.json"> 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%238b6f47'/%3E%3Ctext x='256' y='350' font-size='280' text-anchor='middle'%3E%F0%9F%93%9A%3C/text%3E%3C/svg%3E"> 
-<style> 
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent} 
-  :root{ 
-    --bg:#faf8f5;--card:#fff;--text:#1c1a17;--muted:#7a746c; 
-    --border:#e8e2d9;--accent:#8b6f47;--accent-dk:#6d5637;--gold:#f4b740; 
-    --danger:#c0392b; 
-  } 
-  html,body{height:100%} 
-  body{ 
-    background:var(--bg);color:var(--text); 
-    font:16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif; 
-    padding-bottom:env(safe-area-inset-bottom); 
-  } 
-  header{ 
-    position:sticky;top:0;background:var(--bg);z-index:5; 
-    padding:calc(12px + env(safe-area-inset-top)) 16px 12px; 
-    display:flex;align-items:center;justify-content:space-between; 
-    border-bottom:1px solid var(--border); 
-  } 
-  header h1{font-size:19px;font-weight:700;letter-spacing:-.3px} 
-  .icon-btn{ 
-    width:40px;height:40px;border-radius:50%;border:none; 
-    background:var(--accent);color:#fff;font-size:22px; 
-    display:grid;place-items:center;cursor:pointer; 
-    box-shadow:0 4px 12px rgba(139,111,71,.3); 
-    transition:transform .12s; 
-  } 
-  .icon-btn:active{transform:scale(.94)} 
-  main{padding:16px;max-width:1100px;margin:0 auto} 
-  .empty{ 
-    text-align:center;padding:60px 20px;color:var(--muted); 
-  } 
-  .empty .icon{font-size:56px;margin-bottom:12px} 
-  .empty h2{color:var(--text);font-size:18px;margin-bottom:6px} 
-  .grid{ 
-    display:grid;gap:14px; 
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); 
-  } 
-  .book{ 
-    background:var(--card);border-radius:12px;overflow:hidden; 
-    cursor:pointer;border:1px solid var(--border); 
-    transition:transform .15s; 
-    display:flex;flex-direction:column; 
-  } 
-  .book:active{transform:scale(.97)} 
-  .book .cover{ 
-    aspect-ratio:2/3;background:#e8e2d9;position:relative;overflow:hidden; 
-  } 
-  .book .cover img{width:100%;height:100%;object-fit:cover;display:block} 
-  .book .cover .ph{ 
-    width:100%;height:100%;display:grid;place-items:center; 
-    color:#fff;background:linear-gradient(135deg,#a88860,#6d5637); 
-    padding:12px;text-align:center;font-size:16px;font-weight:600;line-height:1.2; 
-  } 
-  .book .info{padding:10px 10px 12px} 
-  .book .title{ 
-    font-size:13px;font-weight:600;line-height:1.25; 
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; 
-    margin-bottom:2px; 
-  } 
-  .book .author{ 
-    font-size:11px;color:var(--muted); 
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis; 
-    margin-bottom:6px; 
-  } 
-  .book .stars-mini{font-size:12px;color:var(--gold);letter-spacing:1px} 
-  .book .stars-mini .off{color:#d8d3ca} 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fdf5f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Библиотека Виктории">
+<title>Библиотека Виктории</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23c96a8b'/%3E%3Ctext x='256' y='350' font-size='280' text-anchor='middle'%3E%F0%9F%93%9A%3C/text%3E%3C/svg%3E">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --bg:#fdf5f7;--card:#fff;--text:#2a1f24;--muted:#8a7a80;
+    --border:#f0dfe5;--accent:#c96a8b;--accent-dk:#a84e6e;--gold:#f4b740;
+    --danger:#c0392b;
+  }
+  html,body{height:100%}
+  body{
+    background:var(--bg);color:var(--text);
+    font:16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  header{
+    position:sticky;top:0;background:var(--bg);z-index:5;
+    padding:calc(12px + env(safe-area-inset-top)) 16px 12px;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--border);
+  }
+  header h1{font-size:19px;font-weight:700;letter-spacing:-.3px}
+  .site-title{
+    font-family:'Marck Script',cursive;
+    font-size:26px;
+    font-weight:400;
+    letter-spacing:.5px;
+    color:var(--accent-dk);
+    line-height:1.2;
+  }
+  .icon-btn{
+    width:40px;height:40px;border-radius:50%;border:none;
+    background:var(--accent);color:#fff;font-size:22px;
+    display:grid;place-items:center;cursor:pointer;
+    box-shadow:0 4px 12px rgba(201,106,139,.3);
+    transition:transform .12s;
+  }
+  .icon-btn:active{transform:scale(.94)}
+  main{padding:16px;max-width:1100px;margin:0 auto}
+  .empty{
+    text-align:center;padding:60px 20px;color:var(--muted);
+  }
+  .empty .icon{font-size:56px;margin-bottom:12px}
+  .empty h2{color:var(--text);font-size:18px;margin-bottom:6px}
+  .grid{
+    display:grid;gap:14px;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  }
+  .book{
+    background:var(--card);border-radius:12px;overflow:hidden;
+    cursor:pointer;border:1px solid var(--border);
+    transition:transform .15s;
+    display:flex;flex-direction:column;
+  }
+  .book:active{transform:scale(.97)}
+  .book .cover{
+    aspect-ratio:2/3;background:#f0dfe5;position:relative;overflow:hidden;
+  }
+  .book .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .book .cover .ph{
+    width:100%;height:100%;display:grid;place-items:center;
+    color:#fff;background:linear-gradient(135deg,#d78ea6,#a84e6e);
+    padding:12px;text-align:center;font-size:16px;font-weight:600;line-height:1.2;
+  }
+  .book .info{padding:10px 10px 12px}
+  .book .title{
+    font-size:13px;font-weight:600;line-height:1.25;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    margin-bottom:2px;
+  }
+  .book .author{
+    font-size:11px;color:var(--muted);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    margin-bottom:6px;
+  }
+  .book .stars-mini{font-size:12px;color:var(--gold);letter-spacing:1px}
+  .book .stars-mini .off{color:#e8dce1}
 
-  .modal-bg{ 
-    position:fixed;inset:0;background:rgba(20,18,15,.5);z-index:50; 
-    display:none;align-items:flex-end;justify-content:center; 
-    animation:fadeIn .2s ease; 
-  } 
-  .modal-bg.on{display:flex} 
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}} 
-  .sheet{ 
-    background:var(--card);width:100%;max-width:600px; 
-    border-radius:20px 20px 0 0;max-height:92vh;overflow-y:auto; 
-    padding:16px 16px calc(20px + env(safe-area-inset-bottom)); 
-    animation:slideUp .25s cubic-bezier(.4,0,.2,1); 
-  } 
-  @keyframes slideUp{from{transform:translateY(30px);opacity:.6}to{transform:translateY(0);opacity:1}} 
-  .sheet header{ 
-    position:static;padding:0 0 12px;border-bottom:1px solid var(--border); 
-    display:flex;align-items:center;justify-content:space-between; 
-    background:transparent; 
-  } 
-  .sheet header h2{font-size:17px} 
-  .close{ 
-    width:32px;height:32px;border-radius:50%;border:none;background:#f1ebe2; 
-    cursor:pointer;font-size:18px;color:var(--muted); 
-  } 
-  .close:active{transform:scale(.94)} 
+  .modal-bg{
+    position:fixed;inset:0;background:rgba(42,31,36,.5);z-index:50;
+    display:none;align-items:flex-end;justify-content:center;
+    animation:fadeIn .2s ease;
+  }
+  .modal-bg.on{display:flex}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .sheet{
+    background:var(--card);width:100%;max-width:600px;
+    border-radius:20px 20px 0 0;max-height:92vh;overflow-y:auto;
+    padding:16px 16px calc(20px + env(safe-area-inset-bottom));
+    animation:slideUp .25s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes slideUp{from{transform:translateY(30px);opacity:.6}to{transform:translateY(0);opacity:1}}
+  .sheet header{
+    position:static;padding:0 0 12px;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+    background:transparent;
+  }
+  .sheet header h2{font-size:17px}
+  .close{
+    width:32px;height:32px;border-radius:50%;border:none;background:#faf0f3;
+    cursor:pointer;font-size:18px;color:var(--muted);
+  }
+  .close:active{transform:scale(.94)}
 
-  .field{margin:16px 0} 
-  .field label{display:block;font-size:14px;font-weight:600;margin-bottom:6px} 
-  .field .hint{font-size:12px;color:var(--muted);font-weight:400;margin-left:6px} 
-  input[type=text],input[type=search],textarea{ 
-    width:100%;font:inherit;padding:12px 14px;border-radius:10px; 
-    border:1px solid var(--border);background:var(--bg);color:var(--text); 
-    resize:vertical; 
-  } 
-  input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px} 
-  textarea{min-height:100px} 
+  .field{margin:16px 0}
+  .field label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+  .field .hint{font-size:12px;color:var(--muted);font-weight:400;margin-left:6px}
+  input[type=text],input[type=search],textarea{
+    width:100%;font:inherit;padding:12px 14px;border-radius:10px;
+    border:1px solid var(--border);background:var(--bg);color:var(--text);
+    resize:vertical;
+  }
+  input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  textarea{min-height:100px}
 
-  .btn{ 
-    font:600 15px inherit;padding:12px 20px;border-radius:12px;border:none; 
-    background:var(--accent);color:#fff;cursor:pointer; 
-    transition:transform .1s, opacity .15s; 
-  } 
-  .btn:active{transform:scale(.97)} 
-  .btn.block{width:100%;display:block;margin-top:12px} 
-  .btn.ghost{background:#f1ebe2;color:var(--text)} 
-  .btn.danger{background:#fde8e6;color:var(--danger)} 
+  .btn{
+    font:600 15px inherit;padding:12px 20px;border-radius:12px;border:none;
+    background:var(--accent);color:#fff;cursor:pointer;
+    transition:transform .1s, opacity .15s;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn.block{width:100%;display:block;margin-top:12px}
+  .btn.ghost{background:#faf0f3;color:var(--text)}
+  .btn.danger{background:#fde8e6;color:var(--danger)}
 
-  .search-result{ 
-    display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border); 
-    cursor:pointer; 
-  } 
-  .search-result:active{opacity:.7} 
-  .search-result .sr-cover{ 
-    width:48px;height:72px;border-radius:6px;overflow:hidden;flex-shrink:0; 
-    background:#e8e2d9;display:grid;place-items:center;font-size:22px; 
-  } 
-  .search-result .sr-cover img{width:100%;height:100%;object-fit:cover} 
-  .search-result .sr-title{font-size:14px;font-weight:600;margin-bottom:2px} 
-  .search-result .sr-meta{font-size:12px;color:var(--muted)} 
+  .search-result{
+    display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);
+    cursor:pointer;
+  }
+  .search-result:active{opacity:.7}
+  .search-result .sr-cover{
+    width:48px;height:72px;border-radius:6px;overflow:hidden;flex-shrink:0;
+    background:#f0dfe5;display:grid;place-items:center;font-size:22px;
+  }
+  .search-result .sr-cover img{width:100%;height:100%;object-fit:cover}
+  .search-result .sr-title{font-size:14px;font-weight:600;margin-bottom:2px}
+  .search-result .sr-meta{font-size:12px;color:var(--muted)}
 
-  .book-detail{ 
-    display:grid;grid-template-columns:120px 1fr;gap:16px; 
-    margin-bottom:16px; 
-  } 
-  .book-detail .big-cover{ 
-    aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:#e8e2d9; 
-    display:grid;place-items:center;font-size:36px; 
-  } 
-  .book-detail .big-cover img{width:100%;height:100%;object-fit:cover} 
-  .book-detail h3{font-size:18px;margin-bottom:4px;line-height:1.3} 
-  .book-detail .by{color:var(--muted);font-size:13px} 
+  .book-detail{
+    display:grid;grid-template-columns:120px 1fr;gap:16px;
+    margin-bottom:16px;
+  }
+  .book-detail .big-cover{
+    aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:#f0dfe5;
+    display:grid;place-items:center;font-size:36px;
+  }
+  .book-detail .big-cover img{width:100%;height:100%;object-fit:cover}
+  .book-detail h3{font-size:18px;margin-bottom:4px;line-height:1.3}
+  .book-detail .by{color:var(--muted);font-size:13px}
 
-  .status-tabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px} 
-  .status-tabs button{ 
-    padding:7px 14px;border-radius:100px;border:1px solid var(--border); 
-    background:var(--card);font:600 13px inherit;color:var(--muted); 
-    cursor:pointer;white-space:nowrap; 
-  } 
-  .status-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)} 
+  .status-tabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px}
+  .status-tabs button{
+    padding:7px 14px;border-radius:100px;border:1px solid var(--border);
+    background:var(--card);font:600 13px inherit;color:var(--muted);
+    cursor:pointer;white-space:nowrap;
+  }
+  .status-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-  .stars{display:flex;gap:4px;font-size:32px;line-height:1;user-select:none} 
-  .stars span{ 
-    color:#d8d3ca;cursor:pointer;transition:color .12s, transform .12s; 
-  } 
-  .stars span.on{color:var(--gold)} 
-  .stars span:active{transform:scale(.9)} 
-  .stars.small{font-size:22px} 
-  .photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:8px} 
-  .photo{ 
-    position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#e8e2d9; 
-  } 
-  .photo img{width:100%;height:100%;object-fit:cover} 
-  .photo .del{ 
-    position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%; 
-    background:rgba(0,0,0,.6);color:#fff;border:none;font-size:14px;cursor:pointer; 
-    display:grid;place-items:center;line-height:1; 
-  } 
-  .add-photo{ 
-    aspect-ratio:1;border-radius:8px;border:2px dashed var(--border); 
-    background:none;color:var(--muted);font-size:24px;cursor:pointer; 
-    display:grid;place-items:center; 
-  } 
+  .stars{display:flex;gap:4px;font-size:32px;line-height:1;user-select:none}
+  .stars span{
+    color:#e8dce1;cursor:pointer;transition:color .12s, transform .12s;
+  }
+  .stars span.on{color:var(--gold)}
+  .stars span:active{transform:scale(.9)}
+  .stars.small{font-size:22px}
 
-  .review-display{ 
-    border-top:1px solid var(--border);margin-top:12px;padding-top:14px; 
-  } 
-  .rating-row{ 
-    display:flex;justify-content:space-between;align-items:center; 
-    padding:6px 0;font-size:13px; 
-  } 
-  .rating-row .label{color:var(--muted)} 
-  .rating-row .stars{font-size:16px} 
+  .photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:8px}
+  .photo{
+    position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#f0dfe5;
+  }
+  .photo img{width:100%;height:100%;object-fit:cover}
+  .photo .del{
+    position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;
+    background:rgba(0,0,0,.6);color:#fff;border:none;font-size:14px;cursor:pointer;
+    display:grid;place-items:center;line-height:1;
+  }
+  .add-photo{
+    aspect-ratio:1;border-radius:8px;border:2px dashed var(--border);
+    background:none;color:var(--muted);font-size:24px;cursor:pointer;
+    display:grid;place-items:center;
+  }
 
-  .review-text{ 
-    background:var(--bg);border-radius:10px;padding:12px; 
-    font-size:14px;white-space:pre-wrap;line-height:1.5;margin-top:10px; 
-  } 
+  .review-display{
+    border-top:1px solid var(--border);margin-top:12px;padding-top:14px;
+  }
+  .rating-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:6px 0;font-size:13px;
+  }
+  .rating-row .label{color:var(--muted)}
+  .rating-row .stars{font-size:16px}
 
-  .toast{ 
-    position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px); 
-    background:#2c2620;color:#fff;padding:10px 20px;border-radius:100px; 
-    font-size:14px;font-weight:500;opacity:0;pointer-events:none; 
-    transition:all .25s ease;z-index:100; 
-  } 
-  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)} 
+  .review-text{
+    background:var(--bg);border-radius:10px;padding:12px;
+    font-size:14px;white-space:pre-wrap;line-height:1.5;margin-top:10px;
+  }
 
-  .spinner{ 
-    width:28px;height:28px;border:3px solid var(--border); 
-    border-top-color:var(--accent);border-radius:50%; 
-    animation:spin .7s linear infinite;margin:20px auto; 
-  } 
-  @keyframes spin{to{transform:rotate(360deg)}} 
-</style> 
-</head> 
-<body> 
+  .toast{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:#2c2620;color:#fff;padding:10px 20px;border-radius:100px;
+    font-size:14px;font-weight:500;opacity:0;pointer-events:none;
+    transition:all .25s ease;z-index:100;
+  }
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
-<header> 
-  <h1>Моя библиотека</h1> 
-  <button class="icon-btn" id="addBtn" aria-label="Добавить книгу">+</button> 
-</header> 
+  .spinner{
+    width:28px;height:28px;border:3px solid var(--border);
+    border-top-color:var(--accent);border-radius:50%;
+    animation:spin .7s linear infinite;margin:20px auto;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
 
-<main id="main"></main> 
+<header>
+  <h1 class="site-title">Библиотека Виктории</h1>
+  <button class="icon-btn" id="addBtn" aria-label="Добавить книгу">+</button>
+</header>
 
-<div class="modal-bg" id="modal"><div class="sheet" id="sheet"></div></div> 
-<div class="toast" id="toast"></div> 
+<main id="main"></main>
 
-<script> 
-/* ============ IndexedDB ============ */ 
-const DB = { 
-  _p: null, 
-  open() { 
-    if (this._p) return this._p; 
-    this._p = new Promise((res, rej) => { 
-      const r = indexedDB.open('library', 1); 
-      r.onupgradeneeded = e => e.target.result.createObjectStore('books', {keyPath:'id'}); 
-      r.onsuccess = () => res(r.result); 
-      r.onerror = () => rej(r.error); 
-    }); 
-    return this._p; 
-  }, 
-  async all() { 
-    const db = await this.open(); 
-    return new Promise((res, rej) => { 
-      const q = db.transaction('books','readonly').objectStore('books').getAll(); 
-      q.onsuccess = () => res(q.result); 
-      q.onerror = () => rej(q.error); 
-    }); 
-  }, 
-  async put(b) { 
-    const db = await this.open(); 
-    return new Promise((res, rej) => { 
-      const q = db.transaction('books','readwrite').objectStore('books').put(b); 
-      q.onsuccess = () => res(); 
-      q.onerror = () => rej(q.error); 
-    }); 
-  }, 
-  async del(id) { 
-    const db = await this.open(); 
-    return new Promise((res, rej) => { 
-      const q = db.transaction('books','readwrite').objectStore('books').delete(id); 
-      q.onsuccess = () => res(); 
-      q.onerror = () => rej(q.error); 
-    }); 
-  } 
-}; 
+<div class="modal-bg" id="modal"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
 
-/* ============ State ============ */ 
-const state = { books: [], filter: 'all' }; 
+<script>
+/* ============ IndexedDB ============ */
+const DB = {
+  _p: null,
+  open() {
+    if (this._p) return this._p;
+    this._p = new Promise((res, rej) => {
+      const r = indexedDB.open('library', 1);
+      r.onupgradeneeded = e => e.target.result.createObjectStore('books', {keyPath:'id'});
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+    return this._p;
+  },
+  async all() {
+    const db = await this.open();
+    return new Promise((res, rej) => {
+      const q = db.transaction('books','readonly').objectStore('books').getAll();
+      q.onsuccess = () => res(q.result);
+      q.onerror = () => rej(q.error);
+    });
+  },
+  async put(b) {
+    const db = await this.open();
+    return new Promise((res, rej) => {
+      const q = db.transaction('books','readwrite').objectStore('books').put(b);
+      q.onsuccess = () => res();
+      q.onerror = () => rej(q.error);
+    });
+  },
+  async del(id) {
+    const db = await this.open();
+    return new Promise((res, rej) => {
+      const q = db.transaction('books','readwrite').objectStore('books').delete(id);
+      q.onsuccess = () => res();
+      q.onerror = () => rej(q.error);
+    });
+  }
+};
 
-/* ============ Utils ============ */ 
-const $ = s => document.querySelector(s); 
-const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2)); 
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); 
+/* ============ State ============ */
+const state = { books: [], filter: 'all' };
 
-function toast(msg) { 
-  const t = $('#toast'); t.textContent = msg; t.classList.add('on'); 
-  clearTimeout(toast._t); 
-  toast._t = setTimeout(() => t.classList.remove('on'), 2200); 
-} 
+/* ============ Utils ============ */
+const $ = s => document.querySelector(s);
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-function compressPhoto(file, max, quality) { 
-  max = max || 900; 
-  quality = quality || 0.8; 
-  return new Promise((resolve, reject) => { 
-    const reader = new FileReader(); 
-    reader.onload = e => { 
-      const img = new Image(); 
-      img.onload = () => { 
-        let w = img.width, h = img.height; 
-        if (w > h && w > max) { h = Math.round(h * max / w); w = max; } 
-        else if (h > max) { w = Math.round(w * max / h); h = max; } 
-        const c = document.createElement('canvas'); 
-        c.width = w; c.height = h; 
-        c.getContext('2d').drawImage(img, 0, 0, w, h); 
-        resolve(c.toDataURL('image/jpeg', quality)); 
-      }; 
-      img.onerror = reject; 
-      img.src = e.target.result; 
-    }; 
-    reader.onerror = reject; 
-    reader.readAsDataURL(file); 
-  }); 
-} 
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove('on'), 2200);
+}
 
-/* ============ Rendering ============ */ 
-function starsMini(v) { 
-  const total = v || 0; 
-  let s = ''; 
-  for (let i = 1; i <= 5; i++) s += i <= total ? '★' : '<span class="off">★</span>'; 
-  return s; 
-} 
+function compressPhoto(file, max, quality) {
+  max = max || 900;
+  quality = quality || 0.8;
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > h && w > max) { h = Math.round(h * max / w); w = max; }
+        else if (h > max) { w = Math.round(w * max / h); h = max; }
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
-function render() { 
-  const main = $('#main'); 
-  const list = state.books.filter(b => state.filter === 'all' || b.status === state.filter); 
+/* ============ Rendering ============ */
+function starsMini(v) {
+  const total = v || 0;
+  let s = '';
+  for (let i = 1; i <= 5; i++) s += i <= total ? '★' : '<span class="off">★</span>';
+  return s;
+}
 
-  if (!state.books.length) { 
-    main.innerHTML = '<div class="empty"><div class="icon">📚</div><h2>Пока пусто</h2><p>Нажми + сверху, чтобы добавить первую книгу</p></div>'; 
-    return; 
-  } 
+function render() {
+  const main = $('#main');
+  const list = state.books.filter(b => state.filter === 'all' || b.status === state.filter);
 
-  const tabs = [['all','Все'],['read','Прочитано'],['reading','Читаю'],['want','Хочу прочитать']] 
-    .map(p => '<button data-f="'+p[0]+'" class="'+(state.filter===p[0]?'on':'')+'">'+p[1]+'</button>').join(''); 
+  if (!state.books.length) {
+    main.innerHTML = '<div class="empty"><div class="icon">📚</div><h2>Пока пусто</h2><p>Нажми + сверху, чтобы добавить первую книгу</p></div>';
+    return;
+  }
 
-  main.innerHTML = '<div class="status-tabs">' + tabs + '</div>' + 
-    '<div class="grid">' + (list.map(bookCard).join('') || '<p style="color:var(--muted);padding:20px 0">Нет книг в этой категории</p>') + '</div>'; 
+  const tabs = [['all','Все'],['read','Прочитано'],['reading','Читаю'],['want','Хочу прочитать']]
+    .map(p => '<button data-f="'+p[0]+'" class="'+(state.filter===p[0]?'on':'')+'">'+p[1]+'</button>').join('');
 
-  main.querySelectorAll('.status-tabs button').forEach(b => 
-    b.onclick = () => { state.filter = b.dataset.f; render(); }); 
-  main.querySelectorAll('.book').forEach(b => 
-    b.onclick = () => openBook(b.dataset.id)); 
-} 
+  main.innerHTML = '<div class="status-tabs">' + tabs + '</div>' +
+    '<div class="grid">' + (list.map(bookCard).join('') || '<p style="color:var(--muted);padding:20px 0">Нет книг в этой категории</p>') + '</div>';
 
-function bookCard(b) { 
-  const stars = b.review ? b.review.overall : 0; 
-  const cover = b.cover 
-    ? '<img src="' + esc(b.cover) + '" alt="" loading="lazy" onerror="this.parentNode.innerHTML=\'<div class=&quot;ph&quot;>' + esc(b.title) + '</div>\'">' 
-    : '<div class="ph">' + esc(b.title) + '</div>'; 
-  return '<div class="book" data-id="' + esc(b.id) + '">' + 
-    '<div class="cover">' + cover + '</div>' + 
-    '<div class="info"><div class="title">' + esc(b.title) + '</div>' + 
-    '<div class="author">' + esc(b.author || '—') + '</div>' + 
-    (b.review ? '<div class="stars-mini">' + starsMini(stars) + '</div>' : '') + 
-    '</div></div>'; 
-} 
+  main.querySelectorAll('.status-tabs button').forEach(b =>
+    b.onclick = () => { state.filter = b.dataset.f; render(); });
+  main.querySelectorAll('.book').forEach(b =>
+    b.onclick = () => openBook(b.dataset.id));
+}
 
-/* ============ Modal ============ */ 
-function openModal(content) { 
-  $('#sheet').innerHTML = content; 
-  $('#modal').classList.add('on'); 
-} 
-function closeModal() { 
-  $('#modal').classList.remove('on'); 
-  $('#sheet').innerHTML = ''; 
-} 
-window.closeModal = closeModal; 
-$('#modal').onclick = e => { if (e.target.id === 'modal') closeModal(); }; 
+function bookCard(b) {
+  const stars = b.review ? b.review.overall : 0;
+  const cover = b.cover
+    ? '<img src="' + esc(b.cover) + '" alt="" loading="lazy" onerror="this.parentNode.innerHTML=\'<div class=&quot;ph&quot;>' + esc(b.title) + '</div>\'">'
+    : '<div class="ph">' + esc(b.title) + '</div>';
+  return '<div class="book" data-id="' + esc(b.id) + '">' +
+    '<div class="cover">' + cover + '</div>' +
+    '<div class="info"><div class="title">' + esc(b.title) + '</div>' +
+    '<div class="author">' + esc(b.author || '—') + '</div>' +
+    (b.review ? '<div class="stars-mini">' + starsMini(stars) + '</div>' : '') +
+    '</div></div>';
+}
 
-/* ============ Search & Add Book ============ */ 
-function openSearch() { 
-  openModal( 
-    '<header><h2>Добавить книгу</h2>' + 
-    '<button class="close" onclick="closeModal()">×</button></header>' + 
-    '<div class="field"><input type="search" id="q" placeholder="Название или автор..." autofocus></div>' + 
-    '<div id="results"></div>' + 
-    '<button class="btn ghost block" id="manualBtn">Ввести вручную</button>' 
-  ); 
+/* ============ Modal ============ */
+function openModal(content) {
+  $('#sheet').innerHTML = content;
+  $('#modal').classList.add('on');
+}
+function closeModal() {
+  $('#modal').classList.remove('on');
+  $('#sheet').innerHTML = '';
+}
+window.closeModal = closeModal;
+$('#modal').onclick = e => { if (e.target.id === 'modal') closeModal(); };
 
-  const q = $('#q'); 
-  const results = $('#results'); 
-  let tmr; 
+/* ============ Search & Add Book (русскоязычные источники) ============ */
+function openSearch() {
+  openModal(
+    '<header><h2>Добавить книгу</h2>' +
+    '<button class="close" onclick="closeModal()">×</button></header>' +
+    '<div class="field"><input type="search" id="q" placeholder="Название или автор (на русском)..." autofocus></div>' +
+    '<div id="results"></div>' +
+    '<button class="btn ghost block" id="manualBtn">Ввести вручную</button>'
+  );
 
-  const doSearch = async () => { 
-    const term = q.value.trim(); 
-    if (term.length < 2) { results.innerHTML = ''; return; } 
-    results.innerHTML = '<div class="spinner"></div>'; 
-    try { 
-      const r = await fetch('https://openlibrary.org/search.json?q=' + encodeURIComponent(term) + '&limit=15&fields=title,author_name,cover_i,first_publish_year'); 
-      const data = await r.json(); 
-      if (!data.docs || !data.docs.length) { 
-        results.innerHTML = '<p style="color:var(--muted);padding:12px 0">Ничего не найдено. Попробуй другое название или добавь вручную.</p>'; 
-        return; 
-      } 
-      results.innerHTML = data.docs.map(d => { 
-        const cover = d.cover_i ? 'https://covers.openlibrary.org/b/id/' + d.cover_i + '-M.jpg' : null; 
-        const payload = JSON.stringify({title:d.title, author: (d.author_name && d.author_name[0]) || '', cover: cover, year: d.first_publish_year || null}); 
-        return '<div class="search-result" data-t="' + esc(payload) + '">' + 
-          '<div class="sr-cover">' + (cover ? '<img src="' + cover + '" onerror="this.parentNode.textContent=\'📖\'">' : '📖') + '</div>' + 
-          '<div><div class="sr-title">' + esc(d.title) + '</div>' + 
-          '<div class="sr-meta">' + esc((d.author_name && d.author_name[0]) || 'Неизвестен') + (d.first_publish_year ? ' · ' + d.first_publish_year : '') + '</div></div></div>'; 
-      }).join(''); 
-      results.querySelectorAll('.search-result').forEach(row => { 
-        row.onclick = () => addBook(JSON.parse(row.dataset.t)); 
-      }); 
-    } catch (e) { 
-      results.innerHTML = '<p style="color:var(--danger)">Ошибка сети. Проверь интернет.</p>'; 
-    } 
-  }; 
+  const q = $('#q');
+  const results = $('#results');
+  let tmr;
 
-  q.oninput = () => { clearTimeout(tmr); tmr = setTimeout(doSearch, 400); }; 
-  $('#manualBtn').onclick = openManualAdd; 
-} 
+  const doSearch = async () => {
+    const term = q.value.trim();
+    if (term.length < 2) { results.innerHTML = ''; return; }
+    results.innerHTML = '<div class="spinner"></div>';
+    try {
+      const books = await searchRussianBooks(term);
+      if (!books.length) {
+        results.innerHTML = '<p style="color:var(--muted);padding:12px 0">Ничего не найдено. Попробуй другое название или добавь вручную.</p>';
+        return;
+      }
+      results.innerHTML = books.map(d => {
+        const payload = JSON.stringify({title: d.title, author: d.author, cover: d.cover, year: d.year});
+        return '<div class="search-result" data-t="' + esc(payload) + '">' +
+          '<div class="sr-cover">' + (d.cover ? '<img src="' + esc(d.cover) + '" onerror="this.parentNode.textContent=\'📖\'">' : '📖') + '</div>' +
+          '<div><div class="sr-title">' + esc(d.title) + '</div>' +
+          '<div class="sr-meta">' + esc(d.author || 'Неизвестен') + (d.year ? ' · ' + d.year : '') + '</div></div></div>';
+      }).join('');
+      results.querySelectorAll('.search-result').forEach(row => {
+        row.onclick = () => addBook(JSON.parse(row.dataset.t));
+      });
+    } catch (e) {
+      results.innerHTML = '<p style="color:var(--danger)">Ошибка сети. Проверь интернет.</p>';
+    }
+  };
 
-function openManualAdd() { 
-  openModal( 
-    '<header><h2>Добавить вручную</h2>' + 
-    '<button class="close" onclick="closeModal()">×</button></header>' + 
-    '<div class="field"><label>Название *</label><input type="text" id="mTitle"></div>' + 
-    '<div class="field"><label>Автор</label><input type="text" id="mAuthor"></div>' + 
-    '<div class="field"><label>Ссылка на обложку (необязательно)</label><input type="text" id="mCover" placeholder="https://..."></div>' + 
-    '<button class="btn block" id="mSave">Добавить</button>' 
-  ); 
-  $('#mSave').onclick = () => { 
-    const title = $('#mTitle').value.trim(); 
-    if (!title) return toast('Введи название'); 
-    addBook({ title: title, author: $('#mAuthor').value.trim(), cover: $('#mCover').value.trim() || null, year: null }); 
-  }; 
-} 
+  q.oninput = () => { clearTimeout(tmr); tmr = setTimeout(doSearch, 400); };
+  $('#manualBtn').onclick = openManualAdd;
+}
 
-async function addBook(data) { 
-  const book = { 
-    id: uid(), 
-    title: data.title, 
-    author: data.author || '', 
-    cover: data.cover || null, 
-    year: data.year || null, 
-    status: 'want', 
-    review: null, 
-    addedAt: Date.now() 
-  }; 
-  await DB.put(book); 
-  state.books.unshift(book); 
-  render(); 
-  closeModal(); 
-  toast('Книга добавлена'); 
-} 
+async function searchRussianBooks(term) {
+  const out = [];
+  const seen = new Set();
+  const add = (title, author, cover, year) => {
+    const key = (title + '|' + (author || '')).toLowerCase();
+    if (!title || seen.has(key)) return;
+    seen.add(key);
+    out.push({ title, author: author || '', cover: cover || null, year: year || null });
+  };
 
-/* ============ Book detail ============ */ 
-function openBook(id) { 
-  const b = state.books.find(x => x.id === id); 
-  if (!b) return; 
-  const cover = b.cover 
-    ? '<img src="' + esc(b.cover) + '" onerror="this.parentNode.textContent=\'📖\'">' 
-    : '📖'; 
+  // 1) Google Books с ограничением по русскому языку
+  try {
+    const url = 'https://www.googleapis.com/books/v1/volumes?q=' +
+      encodeURIComponent(term) + '&langRestrict=ru&maxResults=15';
+    const r = await fetch(url);
+    if (r.ok) {
+      const data = await r.json();
+      (data.items || []).forEach(it => {
+        const v = it.volumeInfo || {};
+        const cover = v.imageLinks?.thumbnail || v.imageLinks?.smallThumbnail || null;
+        add(v.title || '', (v.authors && v.authors[0]) || '', cover, v.publishedDate ? String(v.publishedDate).slice(0,4) : null);
+      });
+    }
+  } catch (e) { /* тихо игнорируем, идём дальше */ }
 
-  const statusLabels = {read:'Прочитано', reading:'Читаю', want:'Хочу прочитать'}; 
-  const statusOrder = ['want','reading','read']; 
+  // 2) Open Library с фильтром language=rus
+  try {
+    const url = 'https://openlibrary.org/search.json?q=' +
+      encodeURIComponent(term) + '&language=rus&limit=15&fields=title,author_name,cover_i,first_publish_year';
+    const r = await fetch(url);
+    if (r.ok) {
+      const data = await r.json();
+      (data.docs || []).forEach(d => {
+        const cover = d.cover_i ? 'https://covers.openlibrary.org/b/id/' + d.cover_i + '-M.jpg' : null;
+        add(d.title || '', (d.author_name && d.author_name[0]) || '', cover, d.first_publish_year || null);
+      });
+    }
+  } catch (e) { /* тихо игнорируем */ }
 
-  let reviewBlock; 
-  if (b.review) { 
-    const r = b.review; 
-    const row = (label, val) => val ? '<div class="rating-row"><span class="label">' + label + '</span><span class="stars small">' + starsMini(val) + '</span></div>' : ''; 
-    const photosHtml = r.photos && r.photos.length 
-      ? '<div class="photos">' + r.photos.map(p => '<div class="photo"><img src="' + p + '"></div>').join('') + '</div>' 
-      : ''; 
-    reviewBlock = '<div class="review-display">' + 
-      row('Общая оценка', r.overall) + 
-      row('Эмоциональная напряжённость', r.emotional) + 
-      row('Проработка персонажей', r.characters) + 
-      row('Удовлетворённость сюжетом', r.plot) + 
-      (r.romancePresent ? row('Любовная линия', r.romance) : '') + 
-      (r.text ? '<div class="review-text">' + esc(r.text) + '</div>' : '') + 
-      photosHtml + 
-      '<button class="btn block" id="editReview">Редактировать отзыв</button></div>'; 
-  } else { 
-    reviewBlock = '<button class="btn block" id="editReview" style="margin-top:16px">Написать отзыв</button>'; 
-  } 
+  return out;
+}
 
-  const statusBtns = statusOrder.map(s => 
-    '<button data-s="' + s + '" class="' + (b.status===s?'on':'') + '">' + statusLabels[s] + '</button>' 
-  ).join(''); 
+function openManualAdd() {
+  openModal(
+    '<header><h2>Добавить вручную</h2>' +
+    '<button class="close" onclick="closeModal()">×</button></header>' +
+    '<div class="field"><label>Название *</label><input type="text" id="mTitle"></div>' +
+    '<div class="field"><label>Автор</label><input type="text" id="mAuthor"></div>' +
+    '<div class="field"><label>Ссылка на обложку (необязательно)</label><input type="text" id="mCover" placeholder="https://..."></div>' +
+    '<button class="btn block" id="mSave">Добавить</button>'
+  );
+  $('#mSave').onclick = () => {
+    const title = $('#mTitle').value.trim();
+    if (!title) return toast('Введи название');
+    addBook({ title: title, author: $('#mAuthor').value.trim(), cover: $('#mCover').value.trim() || null, year: null });
+  };
+}
 
-  openModal( 
-    '<header><h2>' + esc(b.title) + '</h2>' + 
-    '<button class="close" onclick="closeModal()">×</button></header>' + 
-    '<div class="book-detail" style="margin-top:14px"><div class="big-cover">' + cover + '</div>' + 
-    '<div><h3>' + esc(b.title) + '</h3><div class="by">' + esc(b.author || '—') + (b.year ? ' · ' + b.year : '') + '</div></div></div>' + 
-    '<div class="field"><label>Статус</label><div class="status-tabs" id="statusTabs">' + statusBtns + '</div></div>' + 
-    reviewBlock + 
-    '<button class="btn danger block" id="delBook">Удалить книгу</button>' 
-  ); 
+async function addBook(data) {
+  const book = {
+    id: uid(),
+    title: data.title,
+    author: data.author || '',
+    cover: data.cover || null,
+    year: data.year || null,
+    status: 'want',
+    review: null,
+    addedAt: Date.now()
+  };
+  await DB.put(book);
+  state.books.unshift(book);
+  render();
+  closeModal();
+  toast('Книга добавлена');
+}
 
-  $('#statusTabs').querySelectorAll('button').forEach(btn => { 
-    btn.onclick = async () => { 
-      b.status = btn.dataset.s; 
-      await DB.put(b); 
-      openBook(id); 
-    }; 
-  }); 
+/* ============ Book detail ============ */
+function openBook(id) {
+  const b = state.books.find(x => x.id === id);
+  if (!b) return;
+  const cover = b.cover
+    ? '<img src="' + esc(b.cover) + '" onerror="this.parentNode.textContent=\'📖\'">'
+    : '📖';
 
-  const editBtn = $('#editReview'); 
-  if (editBtn) editBtn.onclick = () => openReviewEditor(b); 
+  const statusLabels = {read:'Прочитано', reading:'Читаю', want:'Хочу прочитать'};
+  const statusOrder = ['want','reading','read'];
 
-  $('#delBook').onclick = async () => { 
-    if (!confirm('Удалить «' + b.title + '»?')) return; 
-    await DB.del(b.id); 
-    state.books = state.books.filter(x => x.id !== b.id); 
-    render(); closeModal(); toast('Удалено'); 
-  }; 
-} 
+  let reviewBlock;
+  if (b.review) {
+    const r = b.review;
+    const row = (label, val) => val ? '<div class="rating-row"><span class="label">' + label + '</span><span class="stars small">' + starsMini(val) + '</span></div>' : '';
+    const photosHtml = r.photos && r.photos.length
+      ? '<div class="photos">' + r.photos.map(p => '<div class="photo"><img src="' + p + '"></div>').join('') + '</div>'
+      : '';
+    reviewBlock = '<div class="review-display">' +
+      row('Общая оценка', r.overall) +
+      row('Эмоциональная напряжённость', r.emotional) +
+      row('Проработка персонажей', r.characters) +
+      row('Удовлетворённость сюжетом', r.plot) +
+      (r.romancePresent ? row('Любовная линия', r.romance) : '') +
+      (r.text ? '<div class="review-text">' + esc(r.text) + '</div>' : '') +
+      photosHtml +
+      '<button class="btn block" id="editReview">Редактировать отзыв</button></div>';
+  } else {
+    reviewBlock = '<button class="btn block" id="editReview" style="margin-top:16px">Написать отзыв</button>';
+  }
 
-/* ============ Review editor ============ */ 
-function openReviewEditor(b) { 
-  const r = b.review || { 
-    text: '', overall: 0, emotional: 0, characters: 0, plot: 0, 
-    romancePresent: false, romance: 0, photos: [] 
-  }; 
+  const statusBtns = statusOrder.map(s =>
+    '<button data-s="' + s + '" class="' + (b.status===s?'on':'') + '">' + statusLabels[s] + '</button>'
+  ).join('');
 
-  const starBlock = (name, val) => { 
-    let inner = ''; 
-    for (let v = 1; v <= 5; v++) inner += '<span data-v="' + v + '" class="' + (v<=val?'on':'') + '">★</span>'; 
-    return '<div class="stars" data-name="' + name + '" data-value="' + val + '">' + inner + '</div>'; 
-  }; 
+  openModal(
+    '<header><h2>' + esc(b.title) + '</h2>' +
+    '<button class="close" onclick="closeModal()">×</button></header>' +
+    '<div class="book-detail" style="margin-top:14px"><div class="big-cover">' + cover + '</div>' +
+    '<div><h3>' + esc(b.title) + '</h3><div class="by">' + esc(b.author || '—') + (b.year ? ' · ' + b.year : '') + '</div></div></div>' +
+    '<div class="field"><label>Статус</label><div class="status-tabs" id="statusTabs">' + statusBtns + '</div></div>' +
+    reviewBlock +
+    '<button class="btn danger block" id="delBook">Удалить книгу</button>'
+  );
 
-  openModal( 
-    '<header><h2>Отзыв</h2>' + 
-    '<button class="close" onclick="openBook(\'' + esc(b.id) + '\')">×</button></header>' + 
-    '<div class="field"><label>Текст отзыва</label><textarea id="rText" placeholder="Что думаешь об этой книге...">' + esc(r.text) + '</textarea></div>' + 
-    '<div class="field"><label>Общая оценка</label>' + starBlock('overall', r.overall) + '</div>' + 
-    '<div class="field"><label>Эмоциональная напряжённость <span class="hint">(грусть, драма)</span></label>' + starBlock('emotional', r.emotional) + '</div>' + 
-    '<div class="field"><label>Проработка персонажей</label>' + starBlock('characters', r.characters) + '</div>' + 
-    '<div class="field"><label>Удовлетворённость сюжетом</label>' + starBlock('plot', r.plot) + '</div>' + 
-    '<div class="field"><label><input type="checkbox" id="rRomancePresent" ' + (r.romancePresent?'checked':'') + ' style="margin-right:6px;vertical-align:middle">Любовная линия присутствует</label>' + 
-    '<div id="romanceWrap" style="margin-top:8px;' + (r.romancePresent?'':'display:none') + '">' + starBlock('romance', r.romance) + '</div></div>' + 
-    '<div class="field"><label>Фотографии</label><div class="photos" id="photos"></div>' + 
-    '<input type="file" id="photoInput" accept="image/*" multiple style="display:none"></div>' + 
-    '<button class="btn block" id="saveReview">Сохранить отзыв</button>' 
-  ); 
- 
-  const ratings = {overall: r.overall, emotional: r.emotional, characters: r.characters, plot: r.plot, romance: r.romance}; 
-  document.querySelectorAll('.stars[data-name]').forEach(stars => { 
-    stars.querySelectorAll('span').forEach(star => { 
-      star.onclick = () => { 
-        const v = +star.dataset.v; 
-        const name = stars.dataset.name; 
-        ratings[name] = ratings[name] === v ? 0 : v; 
-        stars.dataset.value = ratings[name]; 
-        stars.querySelectorAll('span').forEach(s => s.classList.toggle('on', +s.dataset.v <= ratings[name])); 
-      }; 
-    }); 
-  }); 
+  $('#statusTabs').querySelectorAll('button').forEach(btn => {
+    btn.onclick = async () => {
+      b.status = btn.dataset.s;
+      await DB.put(b);
+      openBook(id);
+    };
+  });
 
-  $('#rRomancePresent').onchange = e => { 
-    $('#romanceWrap').style.display = e.target.checked ? 'block' : 'none'; 
-    if (!e.target.checked) { 
-      ratings.romance = 0; 
-      const st = document.querySelector('.stars[data-name="romance"]'); 
-      if (st) { st.dataset.value = 0; st.querySelectorAll('span').forEach(s => s.classList.remove('on')); } 
-    } 
-  }; 
+  const editBtn = $('#editReview');
+  if (editBtn) editBtn.onclick = () => openReviewEditor(b);
 
-  let photos = (r.photos || []).slice(); 
-  const photosEl = $('#photos'); 
-  const renderPhotos = () => { 
-    let html = ''; 
-    for (let i = 0; i < photos.length; i++) { 
-      html += '<div class="photo"><img src="' + photos[i] + '"><button class="del" data-i="' + i + '">×</button></div>'; 
-    } 
-    html += '<button class="add-photo" id="addPhoto">+</button>'; 
-    photosEl.innerHTML = html; 
-    photosEl.querySelectorAll('.photo .del').forEach(btn => { 
-      btn.onclick = () => { photos.splice(+btn.dataset.i, 1); renderPhotos(); }; 
-    }); 
-    const addBtn = $('#addPhoto'); 
-    if (addBtn) addBtn.onclick = () => $('#photoInput').click(); 
-  }; 
-  renderPhotos(); 
- 
-  $('#photoInput').onchange = async e => { 
-    const files = Array.from(e.target.files); 
-    for (const file of files) { 
-      try { 
-        const b64 = await compressPhoto(file); 
-        photos.push(b64); 
-      } catch(err) { toast('Ошибка загрузки фото'); } 
-    } 
-    renderPhotos(); 
-    e.target.value = ''; 
-  }; 
+  $('#delBook').onclick = async () => {
+    if (!confirm('Удалить «' + b.title + '»?')) return;
+    await DB.del(b.id);
+    state.books = state.books.filter(x => x.id !== b.id);
+    render(); closeModal(); toast('Удалено');
+  };
+}
 
-  $('#saveReview').onclick = async () => { 
-    const text = $('#rText').value.trim(); 
-    const romancePresent = $('#rRomancePresent').checked; 
-    const hasAnyRating = ['overall','emotional','characters','plot'].some(k => ratings[k] > 0) || (romancePresent && ratings.romance > 0); 
-    if (!text && !hasAnyRating) return toast('Добавь текст или хотя бы одну оценку'); 
-   
-    b.review = { 
-      text: text, 
-      overall: ratings.overall, 
-      emotional: ratings.emotional, 
-      characters: ratings.characters, 
-      plot: ratings.plot, 
-      romancePresent: romancePresent, 
-      romance: romancePresent ? ratings.romance : 0, 
-      photos: photos, 
-      createdAt: r.createdAt || Date.now(), 
-      updatedAt: Date.now() 
-    }; 
-    await DB.put(b); 
-    toast('Отзыв сохранён'); 
-    openBook(b.id); 
-    render(); 
-  }; 
-} 
+/* ============ Review editor ============ */
+function openReviewEditor(b) {
+  const r = b.review || {
+    text: '', overall: 0, emotional: 0, characters: 0, plot: 0,
+    romancePresent: false, romance: 0, photos: []
+  };
 
-/* ============ Init ============ */ 
-$('#addBtn').onclick = openSearch; 
- 
-(async () => { 
-  try { 
-    state.books = await DB.all(); 
-    state.books.sort((a,b) => b.addedAt - a.addedAt); 
-  } catch(e) { 
-    console.error('DB init failed', e); 
-  } 
-  render(); 
-})(); 
+  const starBlock = (name, val) => {
+    let inner = '';
+    for (let v = 1; v <= 5; v++) inner += '<span data-v="' + v + '" class="' + (v<=val?'on':'') + '">★</span>';
+    return '<div class="stars" data-name="' + name + '" data-value="' + val + '">' + inner + '</div>';
+  };
 
-/* Service worker */ 
-if ('serviceWorker' in navigator) { 
-  navigator.serviceWorker.register('sw.js').catch(() => {}); 
-} 
-</script> 
-</body> 
-</html> 
+  openModal(
+    '<header><h2>Отзыв</h2>' +
+    '<button class="close" onclick="openBook(\'' + esc(b.id) + '\')">×</button></header>' +
+    '<div class="field"><label>Текст отзыва</label><textarea id="rText" placeholder="Что думаешь об этой книге...">' + esc(r.text) + '</textarea></div>' +
+    '<div class="field"><label>Общая оценка</label>' + starBlock('overall', r.overall) + '</div>' +
+    '<div class="field"><label>Эмоциональная напряжённость <span class="hint">(грусть, драма)</span></label>' + starBlock('emotional', r.emotional) + '</div>' +
+    '<div class="field"><label>Проработка персонажей</label>' + starBlock('characters', r.characters) + '</div>' +
+    '<div class="field"><label>Удовлетворённость сюжетом</label>' + starBlock('plot', r.plot) + '</div>' +
+    '<div class="field"><label><input type="checkbox" id="rRomancePresent" ' + (r.romancePresent?'checked':'') + ' style="margin-right:6px;vertical-align:middle">Любовная линия присутствует</label>' +
+    '<div id="romanceWrap" style="margin-top:8px;' + (r.romancePresent?'':'display:none') + '">' + starBlock('romance', r.romance) + '</div></div>' +
+    '<div class="field"><label>Фотографии</label><div class="photos" id="photos"></div>' +
+    '<input type="file" id="photoInput" accept="image/*" multiple style="display:none"></div>' +
+    '<button class="btn block" id="saveReview">Сохранить отзыв</button>'
+  );
+
+  const ratings = {overall: r.overall, emotional: r.emotional, characters: r.characters, plot: r.plot, romance: r.romance};
+  document.querySelectorAll('.stars[data-name]').forEach(stars => {
+    stars.querySelectorAll('span').forEach(star => {
+      star.onclick = () => {
+        const v = +star.dataset.v;
+        const name = stars.dataset.name;
+        ratings[name] = ratings[name] === v ? 0 : v;
+        stars.dataset.value = ratings[name];
+        stars.querySelectorAll('span').forEach(s => s.classList.toggle('on', +s.dataset.v <= ratings[name]));
+      };
+    });
+  });
+
+  $('#rRomancePresent').onchange = e => {
+    $('#romanceWrap').style.display = e.target.checked ? 'block' : 'none';
+    if (!e.target.checked) {
+      ratings.romance = 0;
+      const st = document.querySelector('.stars[data-name="romance"]');
+      if (st) { st.dataset.value = 0; st.querySelectorAll('span').forEach(s => s.classList.remove('on')); }
+    }
+  };
+
+  let photos = (r.photos || []).slice();
+  const photosEl = $('#photos');
+  const renderPhotos = () => {
+    let html = '';
+    for (let i = 0; i < photos.length; i++) {
+      html += '<div class="photo"><img src="' + photos[i] + '"><button class="del" data-i="' + i + '">×</button></div>';
+    }
+    html += '<button class="add-photo" id="addPhoto">+</button>';
+    photosEl.innerHTML = html;
+    photosEl.querySelectorAll('.photo .del').forEach(btn => {
+      btn.onclick = () => { photos.splice(+btn.dataset.i, 1); renderPhotos(); };
+    });
+    const addBtn = $('#addPhoto');
+    if (addBtn) addBtn.onclick = () => $('#photoInput').click();
+  };
+  renderPhotos();
+
+  $('#photoInput').onchange = async e => {
+    const files = Array.from(e.target.files);
+    for (const file of files) {
+      try {
+        const b64 = await compressPhoto(file);
+        photos.push(b64);
+      } catch(err) { toast('Ошибка загрузки фото'); }
+    }
+    renderPhotos();
+    e.target.value = '';
+  };
+
+  $('#saveReview').onclick = async () => {
+    const text = $('#rText').value.trim();
+    const romancePresent = $('#rRomancePresent').checked;
+    const hasAnyRating = ['overall','emotional','characters','plot'].some(k => ratings[k] > 0) || (romancePresent && ratings.romance > 0);
+    if (!text && !hasAnyRating) return toast('Добавь текст или хотя бы одну оценку');
+
+    b.review = {
+      text: text,
+      overall: ratings.overall,
+      emotional: ratings.emotional,
+      characters: ratings.characters,
+      plot: ratings.plot,
+      romancePresent: romancePresent,
+      romance: romancePresent ? ratings.romance : 0,
+      photos: photos,
+      createdAt: r.createdAt || Date.now(),
+      updatedAt: Date.now()
+    };
+    await DB.put(b);
+    toast('Отзыв сохранён');
+    openBook(b.id);
+    render();
+  };
+}
+
+/* ============ Init ============ */
+$('#addBtn').onclick = openSearch;
+
+(async () => {
+  try {
+    state.books = await DB.all();
+    state.books.sort((a,b) => b.addedAt - a.addedAt);
+  } catch(e) {
+    console.error('DB init failed', e);
+  }
+  render();
+})();
+
+/* Service worker */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
