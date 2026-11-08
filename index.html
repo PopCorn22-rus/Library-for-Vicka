@@ -228,9 +228,10 @@
 
 <script>
 /* ============ КОНФИГУРАЦИЯ ============ */
-const ZVUK_API_BASE = 'https://api.zvuk.com';
-// CORS-прокси. Если не работает — попробуйте: 'https://api.allorigins.win/raw?url='
+// CORS-прокси для обхода ограничений браузера
 const CORS_PROXY = 'https://corsproxy.io/?';
+// Базовый URL iTunes Search API
+const ITUNES_API_BASE = 'https://itunes.apple.com/search';
 
 /* ============ IndexedDB ============ */
 const DB = {
@@ -309,37 +310,29 @@ function compressPhoto(file, max, quality) {
   });
 }
 
-/* ============ Поиск в Звуке (анонимный доступ через прокси) ============ */
-let zvukTokenPromise = null;
-
-async function getZvukToken() {
-  if (zvukTokenPromise) return zvukTokenPromise;
-  zvukTokenPromise = (async () => {
-    const targetUrl = ZVUK_API_BASE + '/v1/anonymous-token';
-    const proxyUrl = CORS_PROXY + encodeURIComponent(targetUrl);
-    const r = await fetch(proxyUrl);
-    if (!r.ok) throw new Error('Не удалось получить анонимный токен Звука (' + r.status + ')');
-    const data = await r.json();
-    if (!data.token) throw new Error('Звук не вернул токен');
-    return data.token;
-  })();
-  return zvukTokenPromise;
-}
-
-async function searchZvukTracks(query) {
-  const token = await getZvukToken();
-  const targetUrl = ZVUK_API_BASE + '/v1/search?q=' + encodeURIComponent(query) + '&limit=15';
+/* ============ Поиск в iTunes (без токена, через CORS-прокси) ============ */
+async function searchITunesTracks(query) {
+  const targetUrl = ITUNES_API_BASE + '?term=' + encodeURIComponent(query) +
+    '&media=music&entity=song&limit=15&country=RU';
   const proxyUrl = CORS_PROXY + encodeURIComponent(targetUrl);
-  const r = await fetch(proxyUrl, {
-    headers: { 'Authorization': 'Bearer ' + token }
-  });
-  if (!r.ok) throw new Error('Ошибка поиска в Звуке (' + r.status + ')');
-  const data = await r.json();
-  const tracks = data.tracks?.items || data.tracks || [];
-  return tracks.map(t => ({
-    title: t.title || 'Без названия',
-    artist: (t.artists && t.artists.map(a => a.title || a.name).join(', ')) || 'Неизвестен'
-  }));
+
+  const response = await fetch(proxyUrl);
+  if (!response.ok) {
+    if (response.status === 403 || response.status === 429) {
+      throw new Error('Слишком много запросов к iTunes. Подождите минуту.');
+    }
+    throw new Error('Ошибка поиска в iTunes (' + response.status + ')');
+  }
+
+  const data = await response.json();
+  const tracks = data.results || [];
+
+  return tracks
+    .filter(t => t.wrapperType === 'track' && t.kind === 'song')
+    .map(t => ({
+      title: t.trackName || 'Без названия',
+      artist: t.artistName || 'Неизвестен'
+    }));
 }
 
 /* ============ Rendering ============ */
@@ -566,9 +559,9 @@ function openBook(id) {
     '<div><h3>' + esc(b.title) + '</h3><div class="by">' + esc(b.author || '—') + (b.year ? ' · ' + b.year : '') + '</div></div></div>' +
     '<div class="field"><label>Статус</label><div class="status-tabs" id="statusTabs">' + statusBtns + '</div></div>' +
     reviewBlock +
-    '<div class="playlist-section"><h4>🎵 Плейлист (Звук)</h4>' +
+    '<div class="playlist-section"><h4>🎵 Плейлист (iTunes)</h4>' +
     '<div id="playlistList">' + playlistHtml + '</div>' +
-    '<button class="btn ghost block" id="addTrackBtn" style="margin-top:8px">+ Добавить трек из Звука</button></div>' +
+    '<button class="btn ghost block" id="addTrackBtn" style="margin-top:8px">+ Добавить трек из iTunes</button></div>' +
     '<button class="btn danger block" id="delBook">Удалить книгу</button>'
   );
 
@@ -600,13 +593,13 @@ function openBook(id) {
     };
   });
 
-  $('#addTrackBtn').onclick = () => openZvukTrackSearch(b);
+  $('#addTrackBtn').onclick = () => openITunesTrackSearch(b);
 }
 
-/* ============ Поиск треков в Звуке ============ */
-function openZvukTrackSearch(book) {
+/* ============ Поиск треков в iTunes ============ */
+function openITunesTrackSearch(book) {
   openModal(
-    '<header><h2>Добавить трек из Звука</h2>' +
+    '<header><h2>Добавить трек из iTunes</h2>' +
     '<button class="close" onclick="openBook(\'' + esc(book.id) + '\')">×</button></header>' +
     '<div class="field"><input type="search" id="trackQ" placeholder="Название трека или исполнитель..." autofocus></div>' +
     '<div id="trackResults"></div>'
@@ -621,7 +614,7 @@ function openZvukTrackSearch(book) {
     if (term.length < 2) { results.innerHTML = ''; return; }
     results.innerHTML = '<div class="spinner"></div>';
     try {
-      const tracks = await searchZvukTracks(term);
+      const tracks = await searchITunesTracks(term);
       if (!tracks.length) {
         results.innerHTML = '<p style="color:var(--muted);padding:12px 0">Ничего не найдено. Попробуй другой запрос.</p>';
         return;
@@ -648,7 +641,8 @@ function openZvukTrackSearch(book) {
     }
   };
 
-  q.oninput = () => { clearTimeout(tmr); tmr = setTimeout(doSearch, 500); };
+  // Задержка 700 мс — чтобы не превысить лимит iTunes (~20 запросов/мин)
+  q.oninput = () => { clearTimeout(tmr); tmr = setTimeout(doSearch, 700); };
 }
 
 /* ============ Редактор отзыва ============ */
