@@ -34,11 +34,8 @@
   header h1{font-size:19px;font-weight:700;letter-spacing:-.3px}
   .site-title{
     font-family:'Marck Script',cursive;
-    font-size:26px;
-    font-weight:400;
-    letter-spacing:.5px;
-    color:var(--accent-dk);
-    line-height:1.2;
+    font-size:26px;font-weight:400;letter-spacing:.5px;
+    color:var(--accent-dk);line-height:1.2;
   }
   .icon-btn{
     width:40px;height:40px;border-radius:50%;border:none;
@@ -49,25 +46,17 @@
   }
   .icon-btn:active{transform:scale(.94)}
   main{padding:16px;max-width:1100px;margin:0 auto}
-  .empty{
-    text-align:center;padding:60px 20px;color:var(--muted);
-  }
+  .empty{text-align:center;padding:60px 20px;color:var(--muted)}
   .empty .icon{font-size:56px;margin-bottom:12px}
   .empty h2{color:var(--text);font-size:18px;margin-bottom:6px}
-  .grid{
-    display:grid;gap:14px;
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-  }
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
   .book{
     background:var(--card);border-radius:12px;overflow:hidden;
     cursor:pointer;border:1px solid var(--border);
-    transition:transform .15s;
-    display:flex;flex-direction:column;
+    transition:transform .15s;display:flex;flex-direction:column;
   }
   .book:active{transform:scale(.97)}
-  .book .cover{
-    aspect-ratio:2/3;background:#f0dfe5;position:relative;overflow:hidden;
-  }
+  .book .cover{aspect-ratio:2/3;background:#f0dfe5;position:relative;overflow:hidden}
   .book .cover img{width:100%;height:100%;object-fit:cover;display:block}
   .book .cover .ph{
     width:100%;height:100%;display:grid;place-items:center;
@@ -82,8 +71,7 @@
   }
   .book .author{
     font-size:11px;color:var(--muted);
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    margin-bottom:6px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px;
   }
   .book .stars-mini{font-size:12px;color:var(--gold);letter-spacing:1px}
   .book .stars-mini .off{color:#e8dce1}
@@ -104,8 +92,7 @@
   @keyframes slideUp{from{transform:translateY(30px);opacity:.6}to{transform:translateY(0);opacity:1}}
   .sheet header{
     position:static;padding:0 0 12px;border-bottom:1px solid var(--border);
-    display:flex;align-items:center;justify-content:space-between;
-    background:transparent;
+    display:flex;align-items:center;justify-content:space-between;background:transparent;
   }
   .sheet header h2{font-size:17px}
   .close{
@@ -148,10 +135,7 @@
   .search-result .sr-title{font-size:14px;font-weight:600;margin-bottom:2px}
   .search-result .sr-meta{font-size:12px;color:var(--muted)}
 
-  .book-detail{
-    display:grid;grid-template-columns:120px 1fr;gap:16px;
-    margin-bottom:16px;
-  }
+  .book-detail{display:grid;grid-template-columns:120px 1fr;gap:16px;margin-bottom:16px}
   .book-detail .big-cover{
     aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:#f0dfe5;
     display:grid;place-items:center;font-size:36px;
@@ -169,17 +153,13 @@
   .status-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 
   .stars{display:flex;gap:4px;font-size:32px;line-height:1;user-select:none}
-  .stars span{
-    color:#e8dce1;cursor:pointer;transition:color .12s, transform .12s;
-  }
+  .stars span{color:#e8dce1;cursor:pointer;transition:color .12s, transform .12s}
   .stars span.on{color:var(--gold)}
   .stars span:active{transform:scale(.9)}
   .stars.small{font-size:22px}
 
   .photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:8px}
-  .photo{
-    position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#f0dfe5;
-  }
+  .photo{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#f0dfe5}
   .photo img{width:100%;height:100%;object-fit:cover}
   .photo .del{
     position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;
@@ -192,13 +172,8 @@
     display:grid;place-items:center;
   }
 
-  .review-display{
-    border-top:1px solid var(--border);margin-top:12px;padding-top:14px;
-  }
-  .rating-row{
-    display:flex;justify-content:space-between;align-items:center;
-    padding:6px 0;font-size:13px;
-  }
+  .review-display{border-top:1px solid var(--border);margin-top:12px;padding-top:14px}
+  .rating-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px}
   .rating-row .label{color:var(--muted)}
   .rating-row .stars{font-size:16px}
 
@@ -206,6 +181,22 @@
     background:var(--bg);border-radius:10px;padding:12px;
     font-size:14px;white-space:pre-wrap;line-height:1.5;margin-top:10px;
   }
+
+  .playlist-section{border-top:1px solid var(--border);margin-top:16px;padding-top:14px}
+  .playlist-section h4{font-size:15px;margin-bottom:8px;color:var(--accent-dk)}
+  .track-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 10px;background:var(--bg);border-radius:8px;margin-bottom:6px;
+    font-size:14px;
+  }
+  .track-item .track-info{flex:1;min-width:0}
+  .track-item .track-title{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .track-item .track-artist{font-size:12px;color:var(--muted)}
+  .track-item .track-del{
+    background:none;border:none;color:var(--danger);font-size:18px;
+    cursor:pointer;padding:0 4px;flex-shrink:0;
+  }
+  .track-item .track-del:active{opacity:.6}
 
   .toast{
     position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);
@@ -236,6 +227,9 @@
 <div class="toast" id="toast"></div>
 
 <script>
+/* ============ КОНФИГУРАЦИЯ ============ */
+const ZVUK_API_BASE = 'https://api.zvuk.com';
+
 /* ============ IndexedDB ============ */
 const DB = {
   _p: null,
@@ -313,6 +307,35 @@ function compressPhoto(file, max, quality) {
   });
 }
 
+/* ============ Поиск в Звуке (анонимный доступ) ============ */
+let zvukTokenPromise = null;
+
+async function getZvukToken() {
+  if (zvukTokenPromise) return zvukTokenPromise;
+  zvukTokenPromise = (async () => {
+    const r = await fetch(ZVUK_API_BASE + '/v1/anonymous-token');
+    if (!r.ok) throw new Error('Не удалось получить анонимный токен Звука');
+    const data = await r.json();
+    return data.token;
+  })();
+  return zvukTokenPromise;
+}
+
+async function searchZvukTracks(query) {
+  const token = await getZvukToken();
+  const url = ZVUK_API_BASE + '/v1/search?q=' + encodeURIComponent(query) + '&limit=15';
+  const r = await fetch(url, {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  if (!r.ok) throw new Error('Ошибка поиска в Звуке (' + r.status + ')');
+  const data = await r.json();
+  const tracks = data.tracks?.items || data.tracks || [];
+  return tracks.map(t => ({
+    title: t.title || 'Без названия',
+    artist: (t.artists && t.artists.map(a => a.title || a.name).join(', ')) || 'Неизвестен'
+  }));
+}
+
 /* ============ Rendering ============ */
 function starsMini(v) {
   const total = v || 0;
@@ -367,7 +390,7 @@ function closeModal() {
 window.closeModal = closeModal;
 $('#modal').onclick = e => { if (e.target.id === 'modal') closeModal(); };
 
-/* ============ Search & Add Book (русскоязычные источники) ============ */
+/* ============ Поиск и добавление книги ============ */
 function openSearch() {
   openModal(
     '<header><h2>Добавить книгу</h2>' +
@@ -420,7 +443,6 @@ async function searchRussianBooks(term) {
     out.push({ title, author: author || '', cover: cover || null, year: year || null });
   };
 
-  // 1) Google Books с ограничением по русскому языку
   try {
     const url = 'https://www.googleapis.com/books/v1/volumes?q=' +
       encodeURIComponent(term) + '&langRestrict=ru&maxResults=15';
@@ -433,9 +455,8 @@ async function searchRussianBooks(term) {
         add(v.title || '', (v.authors && v.authors[0]) || '', cover, v.publishedDate ? String(v.publishedDate).slice(0,4) : null);
       });
     }
-  } catch (e) { /* тихо игнорируем, идём дальше */ }
+  } catch (e) {}
 
-  // 2) Open Library с фильтром language=rus
   try {
     const url = 'https://openlibrary.org/search.json?q=' +
       encodeURIComponent(term) + '&language=rus&limit=15&fields=title,author_name,cover_i,first_publish_year';
@@ -447,7 +468,7 @@ async function searchRussianBooks(term) {
         add(d.title || '', (d.author_name && d.author_name[0]) || '', cover, d.first_publish_year || null);
       });
     }
-  } catch (e) { /* тихо игнорируем */ }
+  } catch (e) {}
 
   return out;
 }
@@ -477,6 +498,7 @@ async function addBook(data) {
     year: data.year || null,
     status: 'want',
     review: null,
+    playlist: [],
     addedAt: Date.now()
   };
   await DB.put(book);
@@ -486,7 +508,7 @@ async function addBook(data) {
   toast('Книга добавлена');
 }
 
-/* ============ Book detail ============ */
+/* ============ Детали книги ============ */
 function openBook(id) {
   const b = state.books.find(x => x.id === id);
   if (!b) return;
@@ -517,6 +539,16 @@ function openBook(id) {
     reviewBlock = '<button class="btn block" id="editReview" style="margin-top:16px">Написать отзыв</button>';
   }
 
+  const playlist = b.playlist || [];
+  const playlistHtml = playlist.length
+    ? playlist.map((t, i) =>
+        '<div class="track-item" data-i="' + i + '">' +
+        '<div class="track-info"><div class="track-title">' + esc(t.title) + '</div>' +
+        '<div class="track-artist">' + esc(t.artist) + '</div></div>' +
+        '<button class="track-del" data-i="' + i + '">×</button></div>'
+      ).join('')
+    : '<p style="color:var(--muted);font-size:13px;margin:6px 0">Плейлист пуст</p>';
+
   const statusBtns = statusOrder.map(s =>
     '<button data-s="' + s + '" class="' + (b.status===s?'on':'') + '">' + statusLabels[s] + '</button>'
   ).join('');
@@ -528,6 +560,9 @@ function openBook(id) {
     '<div><h3>' + esc(b.title) + '</h3><div class="by">' + esc(b.author || '—') + (b.year ? ' · ' + b.year : '') + '</div></div></div>' +
     '<div class="field"><label>Статус</label><div class="status-tabs" id="statusTabs">' + statusBtns + '</div></div>' +
     reviewBlock +
+    '<div class="playlist-section"><h4>🎵 Плейлист (Звук)</h4>' +
+    '<div id="playlistList">' + playlistHtml + '</div>' +
+    '<button class="btn ghost block" id="addTrackBtn" style="margin-top:8px">+ Добавить трек из Звука</button></div>' +
     '<button class="btn danger block" id="delBook">Удалить книгу</button>'
   );
 
@@ -548,9 +583,69 @@ function openBook(id) {
     state.books = state.books.filter(x => x.id !== b.id);
     render(); closeModal(); toast('Удалено');
   };
+
+  document.querySelectorAll('#playlistList .track-del').forEach(btn => {
+    btn.onclick = async (e) => {
+      e.stopPropagation();
+      const i = +btn.dataset.i;
+      b.playlist.splice(i, 1);
+      await DB.put(b);
+      openBook(id);
+    };
+  });
+
+  $('#addTrackBtn').onclick = () => openZvukTrackSearch(b);
 }
 
-/* ============ Review editor ============ */
+/* ============ Поиск треков в Звуке ============ */
+function openZvukTrackSearch(book) {
+  openModal(
+    '<header><h2>Добавить трек из Звука</h2>' +
+    '<button class="close" onclick="openBook(\'' + esc(book.id) + '\')">×</button></header>' +
+    '<div class="field"><input type="search" id="trackQ" placeholder="Название трека или исполнитель..." autofocus></div>' +
+    '<div id="trackResults"></div>'
+  );
+
+  const q = $('#trackQ');
+  const results = $('#trackResults');
+  let tmr;
+
+  const doSearch = async () => {
+    const term = q.value.trim();
+    if (term.length < 2) { results.innerHTML = ''; return; }
+    results.innerHTML = '<div class="spinner"></div>';
+    try {
+      const tracks = await searchZvukTracks(term);
+      if (!tracks.length) {
+        results.innerHTML = '<p style="color:var(--muted);padding:12px 0">Ничего не найдено. Попробуй другой запрос.</p>';
+        return;
+      }
+      results.innerHTML = tracks.map(t => {
+        const payload = JSON.stringify({title: t.title, artist: t.artist});
+        return '<div class="search-result" data-t=\'' + payload.replace(/'/g, "&#39;") + '\'>' +
+          '<div class="sr-cover">🎵</div>' +
+          '<div><div class="sr-title">' + esc(t.title) + '</div>' +
+          '<div class="sr-meta">' + esc(t.artist) + '</div></div></div>';
+      }).join('');
+      results.querySelectorAll('.search-result').forEach(row => {
+        row.onclick = async () => {
+          const track = JSON.parse(row.dataset.t);
+          if (!book.playlist) book.playlist = [];
+          book.playlist.push(track);
+          await DB.put(book);
+          toast('Трек добавлен');
+          openBook(book.id);
+        };
+      });
+    } catch (e) {
+      results.innerHTML = '<p style="color:var(--danger)">' + esc(e.message) + '</p>';
+    }
+  };
+
+  q.oninput = () => { clearTimeout(tmr); tmr = setTimeout(doSearch, 500); };
+}
+
+/* ============ Редактор отзыва ============ */
 function openReviewEditor(b) {
   const r = b.review || {
     text: '', overall: 0, emotional: 0, characters: 0, plot: 0,
