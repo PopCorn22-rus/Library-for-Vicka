@@ -228,10 +228,10 @@
 
 <script>
 /* ============ КОНФИГУРАЦИЯ ============ */
-// CORS-прокси для обхода ограничений браузера
-const CORS_PROXY = 'https://corsproxy.io/?';
-// Базовый URL iTunes Search API
-const ITUNES_API_BASE = 'https://itunes.apple.com/search';
+// MusicBrainz не требует токена и поддерживает CORS.
+// Прокси не нужен. Требуется заголовок User-Agent и пауза ≥1 сек между запросами.
+const MUSICBRAINZ_API = 'https://musicbrainz.org/ws/2/recording';
+const MB_USER_AGENT = 'VictoriaLibrary/1.0 (https://example.com)'; // замените контакт на свой
 
 /* ============ IndexedDB ============ */
 const DB = {
@@ -310,29 +310,31 @@ function compressPhoto(file, max, quality) {
   });
 }
 
-/* ============ Поиск в iTunes (без токена, через CORS-прокси) ============ */
-async function searchITunesTracks(query) {
-  const targetUrl = ITUNES_API_BASE + '?term=' + encodeURIComponent(query) +
-    '&media=music&entity=song&limit=15&country=RU';
-  const proxyUrl = CORS_PROXY + encodeURIComponent(targetUrl);
+/* ============ Поиск в MusicBrainz (без токена, без прокси) ============ */
+async function searchMusicBrainzTracks(query) {
+  const url = MUSICBRAINZ_API + '?query=' + encodeURIComponent(query) +
+    '&fmt=json&limit=15';
 
-  const response = await fetch(proxyUrl);
+  const response = await fetch(url, {
+    headers: { 'User-Agent': MB_USER_AGENT }
+  });
+
   if (!response.ok) {
-    if (response.status === 403 || response.status === 429) {
-      throw new Error('Слишком много запросов к iTunes. Подождите минуту.');
+    if (response.status === 503) {
+      throw new Error('MusicBrainz временно перегружен. Подождите несколько секунд.');
     }
-    throw new Error('Ошибка поиска в iTunes (' + response.status + ')');
+    throw new Error('Ошибка поиска в MusicBrainz (' + response.status + ')');
   }
 
   const data = await response.json();
-  const tracks = data.results || [];
+  const recordings = data.recordings || [];
 
-  return tracks
-    .filter(t => t.wrapperType === 'track' && t.kind === 'song')
-    .map(t => ({
-      title: t.trackName || 'Без названия',
-      artist: t.artistName || 'Неизвестен'
-    }));
+  return recordings.map(r => ({
+    title: r.title || 'Без названия',
+    artist: (r['artist-credit'] && r['artist-credit'].length
+      ? r['artist-credit'].map(ac => ac.name || (ac.artist && ac.artist.name)).filter(Boolean).join(', ')
+      : 'Неизвестен')
+  }));
 }
 
 /* ============ Rendering ============ */
@@ -559,9 +561,9 @@ function openBook(id) {
     '<div><h3>' + esc(b.title) + '</h3><div class="by">' + esc(b.author || '—') + (b.year ? ' · ' + b.year : '') + '</div></div></div>' +
     '<div class="field"><label>Статус</label><div class="status-tabs" id="statusTabs">' + statusBtns + '</div></div>' +
     reviewBlock +
-    '<div class="playlist-section"><h4>🎵 Плейлист (iTunes)</h4>' +
+    '<div class="playlist-section"><h4>🎵 Плейлист (MusicBrainz)</h4>' +
     '<div id="playlistList">' + playlistHtml + '</div>' +
-    '<button class="btn ghost block" id="addTrackBtn" style="margin-top:8px">+ Добавить трек из iTunes</button></div>' +
+    '<button class="btn ghost block" id="addTrackBtn" style="margin-top:8px">+ Добавить трек из MusicBrainz</button></div>' +
     '<button class="btn danger block" id="delBook">Удалить книгу</button>'
   );
 
@@ -593,13 +595,13 @@ function openBook(id) {
     };
   });
 
-  $('#addTrackBtn').onclick = () => openITunesTrackSearch(b);
+  $('#addTrackBtn').onclick = () => openMusicBrainzTrackSearch(b);
 }
 
-/* ============ Поиск треков в iTunes ============ */
-function openITunesTrackSearch(book) {
+/* ============ Поиск треков в MusicBrainz ============ */
+function openMusicBrainzTrackSearch(book) {
   openModal(
-    '<header><h2>Добавить трек из iTunes</h2>' +
+    '<header><h2>Добавить трек из MusicBrainz</h2>' +
     '<button class="close" onclick="openBook(\'' + esc(book.id) + '\')">×</button></header>' +
     '<div class="field"><input type="search" id="trackQ" placeholder="Название трека или исполнитель..." autofocus></div>' +
     '<div id="trackResults"></div>'
@@ -607,42 +609,54 @@ function openITunesTrackSearch(book) {
 
   const q = $('#trackQ');
   const results = $('#trackResults');
+  const cache = new Map();
   let tmr;
+
+  const renderResults = (tracks) => {
+    if (!tracks.length) {
+      results.innerHTML = '<p style="color:var(--muted);padding:12px 0">Ничего не найдено. Попробуй другой запрос.</p>';
+      return;
+    }
+    results.innerHTML = tracks.map(t => {
+      const payload = JSON.stringify({title: t.title, artist: t.artist});
+      return '<div class="search-result" data-t=\'' + payload.replace(/'/g, "&#39;") + '\'>' +
+        '<div class="sr-cover">🎵</div>' +
+        '<div><div class="sr-title">' + esc(t.title) + '</div>' +
+        '<div class="sr-meta">' + esc(t.artist) + '</div></div></div>';
+    }).join('');
+    results.querySelectorAll('.search-result').forEach(row => {
+      row.onclick = async () => {
+        const track = JSON.parse(row.dataset.t);
+        if (!book.playlist) book.playlist = [];
+        book.playlist.push(track);
+        await DB.put(book);
+        toast('Трек добавлен');
+        openBook(book.id);
+      };
+    });
+  };
 
   const doSearch = async () => {
     const term = q.value.trim();
     if (term.length < 2) { results.innerHTML = ''; return; }
+
+    if (cache.has(term)) {
+      renderResults(cache.get(term));
+      return;
+    }
+
     results.innerHTML = '<div class="spinner"></div>';
     try {
-      const tracks = await searchITunesTracks(term);
-      if (!tracks.length) {
-        results.innerHTML = '<p style="color:var(--muted);padding:12px 0">Ничего не найдено. Попробуй другой запрос.</p>';
-        return;
-      }
-      results.innerHTML = tracks.map(t => {
-        const payload = JSON.stringify({title: t.title, artist: t.artist});
-        return '<div class="search-result" data-t=\'' + payload.replace(/'/g, "&#39;") + '\'>' +
-          '<div class="sr-cover">🎵</div>' +
-          '<div><div class="sr-title">' + esc(t.title) + '</div>' +
-          '<div class="sr-meta">' + esc(t.artist) + '</div></div></div>';
-      }).join('');
-      results.querySelectorAll('.search-result').forEach(row => {
-        row.onclick = async () => {
-          const track = JSON.parse(row.dataset.t);
-          if (!book.playlist) book.playlist = [];
-          book.playlist.push(track);
-          await DB.put(book);
-          toast('Трек добавлен');
-          openBook(book.id);
-        };
-      });
+      const tracks = await searchMusicBrainzTracks(term);
+      cache.set(term, tracks);
+      renderResults(tracks);
     } catch (e) {
       results.innerHTML = '<p style="color:var(--danger)">' + esc(e.message) + '</p>';
     }
   };
 
-  // Задержка 700 мс — чтобы не превысить лимит iTunes (~20 запросов/мин)
-  q.oninput = () => { clearTimeout(tmr); tmr = setTimeout(doSearch, 700); };
+  // MusicBrainz: не чаще 1 запроса в секунду с одного IP
+  q.oninput = () => { clearTimeout(tmr); tmr = setTimeout(doSearch, 1100); };
 }
 
 /* ============ Редактор отзыва ============ */
