@@ -229,6 +229,8 @@
 <script>
 /* ============ КОНФИГУРАЦИЯ ============ */
 const ZVUK_API_BASE = 'https://api.zvuk.com';
+// CORS-прокси. Если не работает — попробуйте: 'https://api.allorigins.win/raw?url='
+const CORS_PROXY = 'https://corsproxy.io/?';
 
 /* ============ IndexedDB ============ */
 const DB = {
@@ -307,15 +309,18 @@ function compressPhoto(file, max, quality) {
   });
 }
 
-/* ============ Поиск в Звуке (анонимный доступ) ============ */
+/* ============ Поиск в Звуке (анонимный доступ через прокси) ============ */
 let zvukTokenPromise = null;
 
 async function getZvukToken() {
   if (zvukTokenPromise) return zvukTokenPromise;
   zvukTokenPromise = (async () => {
-    const r = await fetch(ZVUK_API_BASE + '/v1/anonymous-token');
-    if (!r.ok) throw new Error('Не удалось получить анонимный токен Звука');
+    const targetUrl = ZVUK_API_BASE + '/v1/anonymous-token';
+    const proxyUrl = CORS_PROXY + encodeURIComponent(targetUrl);
+    const r = await fetch(proxyUrl);
+    if (!r.ok) throw new Error('Не удалось получить анонимный токен Звука (' + r.status + ')');
     const data = await r.json();
+    if (!data.token) throw new Error('Звук не вернул токен');
     return data.token;
   })();
   return zvukTokenPromise;
@@ -323,8 +328,9 @@ async function getZvukToken() {
 
 async function searchZvukTracks(query) {
   const token = await getZvukToken();
-  const url = ZVUK_API_BASE + '/v1/search?q=' + encodeURIComponent(query) + '&limit=15';
-  const r = await fetch(url, {
+  const targetUrl = ZVUK_API_BASE + '/v1/search?q=' + encodeURIComponent(query) + '&limit=15';
+  const proxyUrl = CORS_PROXY + encodeURIComponent(targetUrl);
+  const r = await fetch(proxyUrl, {
     headers: { 'Authorization': 'Bearer ' + token }
   });
   if (!r.ok) throw new Error('Ошибка поиска в Звуке (' + r.status + ')');
